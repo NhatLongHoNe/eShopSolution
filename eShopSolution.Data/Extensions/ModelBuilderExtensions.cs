@@ -1,5 +1,6 @@
 ﻿using eShopSolution.Data.Entities;
 using eShopSolution.Data.Enums;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -60,7 +61,7 @@ namespace eShopSolution.Data.Extensions
                  {
                      Id = 1,
                      ProductId = 1,
-                     Name = "Áo sơ mi nam trắng Việt Tiến",
+                     Name = "Áo sơ mi nam trắng Việt Tiến đây nè",
                      LanguageId = "vi-VN",
                      SeoAlias = "ao-so-mi-nam-trang-viet-tien",
                      SeoDescription = "Áo sơ mi nam trắng Việt Tiến",
@@ -83,6 +84,38 @@ namespace eShopSolution.Data.Extensions
             modelBuilder.Entity<ProductInCategory>().HasData(
                 new ProductInCategory() { ProductId = 1, CategoryId = 1 }
                 );
+            // any guid
+            var roleId = new Guid("8D04DCE2-969A-435D-BBA4-DF3F325983DC");
+            var adminId = new Guid("69BD714F-9576-45BA-B5B7-F00649BE00DE");
+            modelBuilder.Entity<AppRole>().HasData(new AppRole
+            {
+                Id = roleId,
+                Name = "admin",
+                NormalizedName = "admin",
+                Description = "Administrator role"
+            });
+
+            var hasher = new PasswordHasher<AppUser>();
+            modelBuilder.Entity<AppUser>().HasData(new AppUser
+            {
+                Id = adminId,
+                UserName = "admin",
+                NormalizedUserName = "admin",
+                Email = "holongnhat2000@gmail.com",
+                NormalizedEmail = "holongnhat2000@gmail.com",
+                EmailConfirmed = true,
+                PasswordHash = hasher.HashPassword(null, "Abcd1234$"),
+                SecurityStamp = string.Empty,
+                FirstName = "Ho",
+                LastName = "Long Nhat",
+                Dob = new DateTime(2000, 09, 19)
+            });
+
+            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(new IdentityUserRole<Guid>
+            {
+                RoleId = roleId,
+                UserId = adminId
+            });
         }
 
 
