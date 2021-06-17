@@ -10,7 +10,7 @@ using System.Text;
 
 namespace eShopSolution.Data.EF
 {
-    public class EShopDbContext : IdentityDbContext<AppUser,AppRole,Guid>
+    public class EShopDbContext : IdentityDbContext<AppUser, AppRole, Guid>
     {
         public EShopDbContext(DbContextOptions options) : base(options)
         {
@@ -44,6 +44,9 @@ namespace eShopSolution.Data.EF
 
             modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("AppRoleClaims");
             modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("AppUserTokens").HasKey(x => x.UserId);
+        
+            //modelbuilder.entity<somemodel>().hasnokey();
+
             // data seeding (dữ liệu ảo)
             modelBuilder.Seed();
             //base.OnModelCreating(modelBuilder);
@@ -62,8 +65,6 @@ namespace eShopSolution.Data.EF
         public DbSet<ProductTranslation> ProductTranslations { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
-
-
 
     }
 }
