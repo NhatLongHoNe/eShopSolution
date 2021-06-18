@@ -5,8 +5,8 @@ using System.Text;
 
 namespace eShopSolution.Application.Catalog.Products.Dtos.Public
 {
-    public class GetPublicProductPagingRequest:PagingRequestBase
+    public class GetPublicProductPagingRequest : PagingRequestBase
     {
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
     }
 }

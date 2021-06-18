@@ -10,14 +10,14 @@ using eShopSolution.Data.EF;
 namespace eShopSolution.Data.Migrations
 {
     [DbContext(typeof(EShopDbContext))]
-    [Migration("20210615044915_SeedIdentityUser")]
+    [Migration("20210618103610_SeedIdentityUser")]
     partial class SeedIdentityUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.1")
+                .HasAnnotation("ProductVersion", "3.1.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -182,7 +182,7 @@ namespace eShopSolution.Data.Migrations
                         new
                         {
                             Id = new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"),
-                            ConcurrencyStamp = "e16f2504-27ae-4ffc-8062-a3896ab36572",
+                            ConcurrencyStamp = "c0b3b068-3570-4139-b8f1-441a4c14168f",
                             Description = "Administrator role",
                             Name = "admin",
                             NormalizedName = "admin"
@@ -259,7 +259,7 @@ namespace eShopSolution.Data.Migrations
                         {
                             Id = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "81426769-3af2-46aa-b925-72f812e62f1c",
+                            ConcurrencyStamp = "9b5cab65-68dd-4430-9930-1ddcae023da9",
                             Dob = new DateTime(2000, 9, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "holongnhat2000@gmail.com",
                             EmailConfirmed = true,
@@ -268,7 +268,7 @@ namespace eShopSolution.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "holongnhat2000@gmail.com",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBNIFpTfHb/MesaHJsZDrUrJqt0JJ2P+3CkNzicrhvJdStz0tawlnwbXglu2J7VoYQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHkKKGZHYtmMpZLq0gGr901wuAfzp9gbqnlW1jKb37E2YXGfbNWMUqJnyfV3Ie2ReQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -522,7 +522,7 @@ namespace eShopSolution.Data.Migrations
                     b.Property<DateTime>("OrderDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 6, 15, 11, 49, 14, 298, DateTimeKind.Local).AddTicks(176));
+                        .HasDefaultValue(new DateTime(2021, 6, 18, 17, 36, 9, 513, DateTimeKind.Local).AddTicks(2084));
 
                     b.Property<string>("ShipAddress")
                         .IsRequired()
@@ -597,9 +597,6 @@ namespace eShopSolution.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("SeoAlias")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Stock")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -618,7 +615,7 @@ namespace eShopSolution.Data.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2021, 6, 15, 11, 49, 14, 316, DateTimeKind.Local).AddTicks(1804),
+                            DateCreated = new DateTime(2021, 6, 18, 17, 36, 9, 531, DateTimeKind.Local).AddTicks(8143),
                             OriginalPrice = 100000m,
                             Price = 200000m,
                             Stock = 0,
