@@ -1,4 +1,5 @@
-﻿using eShopSolution.ViewModels.Common;
+﻿using eShopSolution.Application.Common;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +16,7 @@ namespace eShopSolution.ViewModels.Catalog.Products.Dtos
         public string SeoTitle { set; get; }
         public string SeoAlias { get; set; }
         public string LanguageId { set; get; }
+        public IFormFile ThumbnailImage { get; set; }
 
     }
 }
