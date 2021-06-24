@@ -14,6 +14,7 @@ using eShopSolution.Utilities.Constants;
 using eShopSolution.Application.Catalog.Products;
 using eShopSolution.Application.Catalog;
 using Microsoft.OpenApi.Models;
+using eShopSolution.Application.Common;
 
 namespace eShopSolution.BackendApi
 {
@@ -32,8 +33,11 @@ namespace eShopSolution.BackendApi
             services.AddDbContext<EShopDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString(SystemConstants.MainConnectionString)));
 
+            services.AddTransient<IStorageService, FileStorageService>();
+
             //Declare DI
             services.AddTransient<IPublicProductService, PublicProductService>();
+            services.AddTransient<IManageProductService, ManageProductService>();
 
             services.AddControllersWithViews();
 

@@ -20,7 +20,7 @@ namespace eShopSolution.Application.Catalog
             _context = context;
         }
 
-        public async Task<List<ProductViewModel>> GetAll()
+        public async Task<List<ProductViewModel>> GetAll(string languageId)
         {
             // dapper fail
             //var query = "select * from products as p join ProductTranslations as pt on p.id = pt.productid";
@@ -31,6 +31,7 @@ namespace eShopSolution.Application.Catalog
                         join pt in _context.ProductTranslations on p.Id equals pt.ProductId
                         join pic in _context.ProductInCategories on p.Id equals pic.ProductId
                         join c in _context.Categories on pic.CategoryId equals c.Id
+                        where pt.LanguageId == languageId
                         select new { p, pt, pic };
             var data = await query.Select(x => new ProductViewModel()
             {
@@ -57,6 +58,7 @@ namespace eShopSolution.Application.Catalog
                         join pt in _context.ProductTranslations on p.Id equals pt.ProductId
                         join pic in _context.ProductInCategories on p.Id equals pic.ProductId
                         join c in _context.Categories on pic.CategoryId equals c.Id
+                        where pt.LanguageId == request.LanguageId
                         select new { p, pt, pic };
             //2 . filter
 
