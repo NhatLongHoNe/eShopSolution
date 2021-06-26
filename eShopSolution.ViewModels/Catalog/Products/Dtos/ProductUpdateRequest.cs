@@ -6,7 +6,7 @@ using System.Text;
 
 namespace eShopSolution.ViewModels.Catalog.Products.Dtos
 {
-    public class ProductUpdateRequest :PagingRequestBase
+    public class ProductUpdateRequest
     {
         public int Id { set; get; }
         public string Name { set; get; }

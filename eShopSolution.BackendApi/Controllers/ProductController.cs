@@ -28,11 +28,10 @@ namespace eShopSolution.BackendApi.Controllers
             return Ok(products);
         }
         //done
-        [HttpPost(nameof(GetListByCategoryIdPageing))]
-        public async Task<IActionResult> GetListByCategoryIdPageing([FromBody]GetPublicProductPagingRequest request)
+        [HttpPost(nameof(GetListByCategoryId))]
+        public async Task<IActionResult> GetListByCategoryId([FromBody]GetPublicProductPagingRequest request)
         {
             var products = await _publicProductService.GetListByCategoryIdPageing(request);
-
             return Ok(products);
         }
         //done
@@ -59,6 +58,39 @@ namespace eShopSolution.BackendApi.Controllers
 
             return Created(nameof(GetProductByIdAndLanguageId), product);
         }
-        
+        //update product
+        [HttpPost(nameof(UpdateProduct))]
+        public async Task<IActionResult> UpdateProduct([FromForm] ProductUpdateRequest request)
+        {
+            var affectedResult = await _manageProductService.Update(request);
+            if (affectedResult == 0)
+            {
+                return BadRequest();
+            }
+
+            return  Ok();
+        }
+        //delete product
+        [HttpPost(nameof(DeleteProduct))]
+        public async Task<IActionResult> DeleteProduct(int productId)
+        {
+            var affectedResult = await _manageProductService.Delete(productId);
+            if (affectedResult == 0)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+        //update price
+        [HttpPost(nameof(UpdatePriceProduct))]
+        public async Task<IActionResult> UpdatePriceProduct(int productId, decimal newPrice)
+        {
+            var isSuccessful = await _manageProductService.UpdatePrice(productId, newPrice);
+            if (isSuccessful == false)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
     }
 }

@@ -11,10 +11,11 @@ namespace eShopSolution.Application.Catalog.Products
         Task<int> Create(ProductCreateRequest request);
         Task<int> Update(ProductUpdateRequest request);
         Task<int> Delete(int productId);
-        Task<PagedResult<ProductViewModel>> ListAllPaging(GetManageProductPagingRequest request);
-        Task<bool> UpdatePrice(int productId , decimal newPrice);
-        Task<bool> UpdateStock(int productId , int addedQuantity);
+        Task<ProductViewModel> GetById(int productId, string languageId);
+        Task<bool> UpdatePrice(int productId, decimal newPrice);
+        Task<bool> UpdateStock(int productId, int addedQuantity);
         Task AddViewCount(int productId);
+        Task<PagedResult<ProductViewModel>> ListAllPaging(GetManageProductPagingRequest request);
         Task<int> AddImages(int productId, List<IFormFile> files);
 
         Task<int> RemoveImages(int imageId);
@@ -22,6 +23,5 @@ namespace eShopSolution.Application.Catalog.Products
         Task<int> UpdateImage(int imageId, string caption, bool isDefault);
 
         Task<List<ProductImageViewModel>> GetListImage(int productId);
-        Task<ProductViewModel> GetById(int productId, string languageId);
     }
 }

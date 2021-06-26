@@ -26,9 +26,16 @@ namespace eShopSolution.Application.Catalog.Products
             _storageService = storageService;
         }
 
-        public Task<int> AddImages(int productId, List<IFormFile> files)
+        public async Task<int> AddImages(int productId, List<IFormFile> files)
         {
-            throw new NotImplementedException();
+            var productImages = new ProductImage()
+            {
+
+            };
+            files.AddRange((IEnumerable<IFormFile>)productImages);
+
+            return await _context.SaveChangesAsync();
+
         }
 
         public async Task AddViewCount(int productId)
@@ -121,9 +128,20 @@ namespace eShopSolution.Application.Catalog.Products
             return productViewModel;
         }
 
-        public Task<List<ProductImageViewModel>> GetListImage(int productId)
+        public async Task<List<ProductImageViewModel>> GetListImage(int productId)
         {
-            throw new NotImplementedException();
+            return await _context.ProductImages.Where(x => x.ProductId == productId)
+                .Select(i => new ProductImageViewModel()
+                {
+                    Caption = i.Caption,
+                    DateCreated = i.DateCreated,
+                    FileSize = i.FileSize,
+                    Id = i.Id,
+                    ImagePath = i.ImagePath,
+                    IsDefault = i.IsDefault,
+                    ProductId = i.ProductId,
+                    SortOrder = i.SortOrder
+                }).ToListAsync();
         }
 
         public async Task<PagedResult<ProductViewModel>> ListAllPaging(GetManageProductPagingRequest request)
