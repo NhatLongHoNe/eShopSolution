@@ -1,4 +1,4 @@
-using eShopSolution.Data.EF;
+﻿using eShopSolution.Data.EF;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -15,6 +15,9 @@ using eShopSolution.Application.Catalog.Products;
 using eShopSolution.Application.Catalog;
 using Microsoft.OpenApi.Models;
 using eShopSolution.Application.Common;
+using Microsoft.AspNetCore.Identity;
+using eShopSolution.Data.Entities;
+using eShopSolution.Application.System.Users;
 
 namespace eShopSolution.BackendApi
 {
@@ -32,13 +35,26 @@ namespace eShopSolution.BackendApi
         {
             services.AddDbContext<EShopDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString(SystemConstants.MainConnectionString)));
-
+            // đăng nhập và quyền để sử dụng stores
+            services.AddIdentity<AppUser, AppRole>()
+                .AddEntityFrameworkStores<EShopDbContext>()
+                .AddDefaultTokenProviders();
+            // them sửa xóa ảnh
             services.AddTransient<IStorageService, FileStorageService>();
 
             //Declare DI
+            //products
             services.AddTransient<IPublicProductService, PublicProductService>();
             services.AddTransient<IManageProductService, ManageProductService>();
+            //users
+            services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
+            services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
+            services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
+            
+            services.AddTransient<IUserService, UserService>();
 
+
+            //end DI
             services.AddControllersWithViews();
 
             //services.AddSwaggerGen();
