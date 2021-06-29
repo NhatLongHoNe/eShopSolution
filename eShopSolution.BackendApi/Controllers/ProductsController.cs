@@ -1,6 +1,7 @@
 ﻿using eShopSolution.Application.Catalog.Products;
 using eShopSolution.ViewModels.Catalog.ProductImages;
 using eShopSolution.ViewModels.Catalog.Products;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace eShopSolution.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductsController : ControllerBase
     {
         private readonly IPublicProductService _publicProductService;
@@ -23,7 +25,7 @@ namespace eShopSolution.BackendApi.Controllers
         }
         //done
         [HttpPost(nameof(GetListByCategoryId))]
-        public async Task<IActionResult> GetListByCategoryId(string languageId, GetPublicProductPagingRequest request)
+        public async Task<IActionResult> GetListByCategoryId([FromRoute]string languageId,[FromForm] GetPublicProductPagingRequest request)
         {
             var products = await _publicProductService.GetListByCategoryIdPageing(languageId, request);
             return Ok(products);
