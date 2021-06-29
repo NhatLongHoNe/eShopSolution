@@ -47,7 +47,7 @@ namespace eShopSolution.BackendApi.Controllers
             var isSuccess = await _userService.Register(request);
             if (isSuccess == false)
             {
-                return BadRequest("dang ky that bai");
+                return BadRequest("register fail");
             }
             return Ok();
         }

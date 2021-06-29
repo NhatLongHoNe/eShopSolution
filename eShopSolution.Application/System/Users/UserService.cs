@@ -70,7 +70,8 @@ namespace eShopSolution.Application.System.Users
                 PhoneNumber = request.PhoneNumber,
                 UserName = request.UserName
             };
-            if (request.Password != request.ConfirmPassword) return false;
+            //đã check ở Validator
+            //if (request.Password != request.ConfirmPassword) return false;
             var result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)
             {

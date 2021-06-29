@@ -20,6 +20,8 @@ using eShopSolution.Data.Entities;
 using eShopSolution.Application.System.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using FluentValidation.AspNetCore;
+using eShopSolution.ViewModels.System;
 
 namespace eShopSolution.BackendApi
 {
@@ -55,7 +57,11 @@ namespace eShopSolution.BackendApi
             
             services.AddTransient<IUserService, UserService>();
 
-
+            //services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
+            //services.AddTransient<IValidator<RegisterRequest>, RegisterRequestValidator>();
+            // khai báo validate
+            services.AddControllers()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
             //end DI
             //services.AddControllersWithViews();
             services.AddControllers();
