@@ -1,5 +1,5 @@
 ﻿using eShopSolution.Application.System.Users;
-using eShopSolution.ViewModels.System;
+using eShopSolution.ViewModels.System.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +12,6 @@ namespace eShopSolution.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -20,16 +19,16 @@ namespace eShopSolution.BackendApi.Controllers
         {
             _userService = userService;
         }
-        [HttpPost(nameof(Authencate))]
+        [HttpPost(nameof(Authenticate))]
         [AllowAnonymous]
-        public async Task<IActionResult> Authencate(LoginRequest request)
+        public async Task<IActionResult> Authenticate([FromBody]LoginRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var resultToken = await _userService.Authencate(request);
+            var resultToken = await _userService.Authenticate(request);
             if (string.IsNullOrEmpty(resultToken))
             {
                 return BadRequest("Username or password is incorrect.");

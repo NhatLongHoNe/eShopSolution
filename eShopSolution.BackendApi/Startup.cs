@@ -21,7 +21,7 @@ using eShopSolution.Application.System.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using FluentValidation.AspNetCore;
-using eShopSolution.ViewModels.System;
+using eShopSolution.ViewModels.System.Users;
 
 namespace eShopSolution.BackendApi
 {
