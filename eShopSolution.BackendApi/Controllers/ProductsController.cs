@@ -25,7 +25,7 @@ namespace eShopSolution.BackendApi.Controllers
         }
         //done
         [HttpPost(nameof(GetListByCategoryId))]
-        public async Task<IActionResult> GetListByCategoryId([FromRoute]string languageId,[FromForm] GetPublicProductPagingRequest request)
+        public async Task<IActionResult> GetListByCategoryId(string languageId, GetPublicProductPagingRequest request)
         {
             var products = await _publicProductService.GetListByCategoryIdPageing(languageId, request);
             return Ok(products);
