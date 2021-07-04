@@ -2,6 +2,7 @@
 using eShopSolution.ViewModels.System.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Logging;
@@ -25,9 +26,19 @@ namespace eShopSolution.AdminApp.Controllers
             _userApiClient = userApiClient;
             _configuration = configuration;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string keyWord,int pageIndex = 1,int pageSize =10)
         {
-            return View();
+            var session = HttpContext.Session.GetString("Token");
+            var demo =  HttpContext.Session.GetString("Nhat");
+            var request = new GetUsersPagingRequest()
+            {
+                BearerToken = session,
+                Keyword = keyWord,
+                PageIndex = pageIndex,
+                PageSize = pageSize
+            };
+            var res = await _userApiClient.GetUsersPaging(request);
+            return View(res);
         }
         [HttpGet]
         public async Task<IActionResult> Login()
@@ -52,13 +63,15 @@ namespace eShopSolution.AdminApp.Controllers
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         userPrincipal,
                         authProperties);
-
+            HttpContext.Session.SetString("Token",token);
+            HttpContext.Session.SetString("Nhat","123");
             return RedirectToAction("Index", "Home");
         }
         [HttpPost]
         public async Task<IActionResult> LogOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Remove("Token");
             return RedirectToAction("Login", "User");
         }
         // hàm giải mã token

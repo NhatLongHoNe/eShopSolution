@@ -48,8 +48,7 @@ namespace eShopSolution.BackendApi
 
             //Declare DI
             //products
-            services.AddTransient<IPublicProductService, PublicProductService>();
-            services.AddTransient<IManageProductService, ManageProductService>();
+            services.AddTransient<IProductService, ProductService>();
             //users
             services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
             services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
@@ -66,7 +65,7 @@ namespace eShopSolution.BackendApi
             //services.AddControllersWithViews();
             services.AddControllers();
 
-
+            //swagger bearer
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger eShop Solution", Version = "v1" });

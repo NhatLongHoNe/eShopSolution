@@ -12,6 +12,7 @@ namespace eShopSolution.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -49,6 +50,12 @@ namespace eShopSolution.BackendApi.Controllers
                 return BadRequest("register fail");
             }
             return Ok();
+        }
+        [HttpPost(nameof(GetUsersPaging))]
+        public async Task<IActionResult> GetUsersPaging(GetUsersPagingRequest request)
+        {
+            var res = await _userService.GetUsersPaging(request);
+            return Ok(res);
         }
     }
 }

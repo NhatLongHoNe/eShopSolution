@@ -28,16 +28,24 @@ namespace eShopSolution.AdminApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpClient();
-            // check authen
+            // check authen by cookie
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
                     options.LoginPath = "/User/Login/";
                     options.AccessDeniedPath = "/User/Forbidden/";
                 });
-
+            // add session
+           
+            // check validation by RegisterValidators
             services.AddControllersWithViews()
                      .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
+
+            //services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
 
             services.AddTransient<IUserApiClient, UserApiClient>();
 
@@ -68,12 +76,13 @@ namespace eShopSolution.AdminApp
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+
             app.UseAuthentication();
 
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
