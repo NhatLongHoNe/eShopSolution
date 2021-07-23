@@ -29,7 +29,7 @@ namespace eShopSolution.Application.System.Users
             _roleManager = roleManager;
             _config = config;
         }
-        public async Task<string> Authenticate(LoginRequest request)
+        public async Task<ApiResult<string>> Authenticate(LoginRequest request)
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
             if (user == null) return null;
@@ -59,40 +59,71 @@ namespace eShopSolution.Application.System.Users
                 expires: DateTime.Now.AddHours(3),
                 signingCredentials: creds);
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new ApiSuccessResult<string>(new JwtSecurityTokenHandler().WriteToken(token));
 
         }
 
-        public async Task<PagedResult<UserViewModel>> GetUsersPaging(GetUsersPagingRequest request)
+        public async Task<ApiResult<UserViewModel>> GetById(Guid id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if(user == null)
+            {
+                return new ApiErrorResult<UserViewModel>("user k tồn tại");
+            }
+            var res = new UserViewModel()
+            {
+                Id = user.Id,
+                FirstName = user.FirstName, 
+                LastName = user.LastName,
+                Dob = user.Dob,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber
+            };
+            return new ApiSuccessResult<UserViewModel>(res);
+        }
+
+        public async Task<ApiResult<PagedResult<UserViewModel>>> GetUsersPaging(GetUsersPagingRequest request)
         {
 
             var query = _userManager.Users;
             if (!string.IsNullOrEmpty(request.Keyword))
             {
-                query = query.Where(x => x.UserName.Equals(request.Keyword) 
+                query = query.Where(x => x.UserName.Equals(request.Keyword)
                     || x.UserName.Equals(request.Keyword));
             }
-            int totalRow = await query.CountAsync(); 
-            var data = await query.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize)
-                            .Select(x => new UserViewModel()
-                            {
-                                UserName = x.UserName,
-                                Id = x.Id,
-                                FullName = x.FirstName +" "+ x.LastName,
-                                Dob = x.Dob,
-                                Email = x.Email,
-                                PhoneNumber = x.PhoneNumber
-                            }).ToListAsync();
+            // Paging
+            int totalRow = await query.CountAsync();
+
+            var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .Select(x => new UserViewModel()
+                {
+                    UserName = x.UserName,
+                    Id = x.Id,
+                    FullName = x.FirstName + " " + x.LastName,
+                    Dob = x.Dob,
+                    Email = x.Email,
+                    PhoneNumber = x.PhoneNumber
+                }).ToListAsync();
+            //select
             var pageResrult = new PagedResult<UserViewModel>()
             {
                 TotalRecord = totalRow,
                 Items = data
-            }; 
-            return pageResrult;
+            };
+            return new ApiSuccessResult<PagedResult<UserViewModel>>(pageResrult);
         }
 
-        public async Task<bool> Register(RegisterRequest request)
+        public async Task<ApiResult<bool>> Register(RegisterRequest request)
         {
+            if (await _userManager.FindByNameAsync(request.UserName) != null)
+            {
+                return new ApiErrorResult<bool>("Tài khoản đã tồn tại");
+            }
+            if (await _userManager.FindByEmailAsync(request.Email) != null)
+            {
+                return new ApiErrorResult<bool>("Email đã tồn tại");
+            }
             var user = new AppUser()
             {
                 FirstName = request.FirstName,
@@ -107,9 +138,32 @@ namespace eShopSolution.Application.System.Users
             var result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)
             {
-                return true;
+                return new ApiSuccessResult<bool>();
             }
-            return false;
+            return new ApiErrorResult<bool>("Đăng ký thất bại");
+        }
+
+        public async Task<ApiResult<bool>> UpdateUser(Guid id, UserUpdateRequest request)
+        {
+            // có bất cứ thằng nào
+            if (await _userManager.Users.AnyAsync(x => x.Email == request.Email && x.Id != id))
+            {
+                return new ApiErrorResult<bool>("Emai đã tồn tại");
+            }
+
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.Dob = request.Dob;
+            user.Email = request.Email;
+            user.PhoneNumber = request.PhoneNumber;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                return new ApiSuccessResult<bool>();
+            }
+            return new ApiErrorResult<bool>("cập nhật thất bại");
         }
     }
 }
