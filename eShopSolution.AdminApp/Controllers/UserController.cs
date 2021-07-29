@@ -26,7 +26,7 @@ namespace eShopSolution.AdminApp.Controllers
             _userApiClient = userApiClient;
             _configuration = configuration;
         }
-        public async Task<IActionResult> Index(string keyWord,int pageIndex = 1,int pageSize =10)
+        public async Task<IActionResult> Index(string keyWord,int pageIndex = 1,int pageSize =3)
         {
             var request = new GetUsersPagingRequest()
             {  
@@ -34,6 +34,7 @@ namespace eShopSolution.AdminApp.Controllers
                 PageIndex = pageIndex,
                 PageSize = pageSize
             };
+            ViewBag.KeyWord = keyWord;
             var res = await _userApiClient.GetUsersPaging(request);
             return View(res.ResultObj);
         }
@@ -75,14 +76,55 @@ namespace eShopSolution.AdminApp.Controllers
                 return View(updateRequest);
             }
             return RedirectToAction("Error","Home");
-
         }
+        
         [HttpPost]
         public async Task<IActionResult> Edit(UserUpdateRequest request)
         {
             if (!ModelState.IsValid)
                 return View();
             var res = await _userApiClient.UpdateUser(request.Id, request);
+            if (res.IsSuccessed)
+            {
+                return RedirectToAction("Index", "User");
+            }
+            ModelState.AddModelError("", res.Message);
+            return View(request);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var result = await _userApiClient.GetById(id);
+            if (result.IsSuccessed)
+            {
+                var user = result.ResultObj;
+                var updateRequest = new UserViewModel()
+                {
+                    Id = id,
+                    FullName = user.FirstName + " " + user.LastName,
+                    Dob = user.Dob,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    UserName = user.UserName
+                };
+                return View(updateRequest);
+            }
+            return RedirectToAction("Error", "Home");
+        }
+        [HttpGet]
+        public IActionResult Delete(Guid id)
+        {
+            return View(new UserDeleteRequest() { 
+                Id = id
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(UserDeleteRequest request)
+        {
+            if (!ModelState.IsValid)
+                return View();
+            var res = await _userApiClient.DeleteById(request.Id); 
             if (res.IsSuccessed)
             {
                 return RedirectToAction("Index", "User");

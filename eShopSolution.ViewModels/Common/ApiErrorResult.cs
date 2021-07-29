@@ -9,7 +9,7 @@ namespace eShopSolution.ViewModels.Common
         public string[] ValidationErrors { get; set; }
         public ApiErrorResult()
         {
-            IsSuccessed = false;
+            //IsSuccessed = false;
         }
         public  ApiErrorResult(string message)
         {

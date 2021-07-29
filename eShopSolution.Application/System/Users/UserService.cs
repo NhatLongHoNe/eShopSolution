@@ -32,12 +32,12 @@ namespace eShopSolution.Application.System.Users
         public async Task<ApiResult<string>> Authenticate(LoginRequest request)
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
-            if (user == null) return null;
+            if (user == null) return new ApiErrorResult<string>("tài khoản mật khẩu không tồn tại");
 
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
             if (!result.Succeeded)
             {
-                return null;
+                return new ApiErrorResult<string>("Đăng nhập không đúng");
             }
             // danh sách quyền???
             var roles = await _userManager.GetRolesAsync(user);
@@ -63,6 +63,19 @@ namespace eShopSolution.Application.System.Users
 
         }
 
+        public async Task<ApiResult<bool>> DeleteById(Guid id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                return new ApiErrorResult<bool>("user k tồn tại");
+            }
+            var result = await _userManager.DeleteAsync(user);
+            if(result.Succeeded)
+                return new ApiSuccessResult<bool>();
+            return new ApiErrorResult<bool>("Xóa K thành công");
+        }
+
         public async Task<ApiResult<UserViewModel>> GetById(Guid id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
@@ -77,7 +90,8 @@ namespace eShopSolution.Application.System.Users
                 LastName = user.LastName,
                 Dob = user.Dob,
                 Email = user.Email,
-                PhoneNumber = user.PhoneNumber
+                PhoneNumber = user.PhoneNumber,
+                UserName = user.UserName
             };
             return new ApiSuccessResult<UserViewModel>(res);
         }
@@ -88,8 +102,8 @@ namespace eShopSolution.Application.System.Users
             var query = _userManager.Users;
             if (!string.IsNullOrEmpty(request.Keyword))
             {
-                query = query.Where(x => x.UserName.Equals(request.Keyword)
-                    || x.UserName.Equals(request.Keyword));
+                query = query.Where(x => x.UserName.Contains(request.Keyword)
+                    || x.UserName.Contains(request.Keyword));
             }
             // Paging
             int totalRow = await query.CountAsync();
@@ -108,7 +122,9 @@ namespace eShopSolution.Application.System.Users
             //select
             var pageResrult = new PagedResult<UserViewModel>()
             {
-                TotalRecord = totalRow,
+                TotalRecords = totalRow,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
                 Items = data
             };
             return new ApiSuccessResult<PagedResult<UserViewModel>>(pageResrult);

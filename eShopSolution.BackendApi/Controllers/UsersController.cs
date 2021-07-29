@@ -32,7 +32,7 @@ namespace eShopSolution.BackendApi.Controllers
             var result = await _userService.Authenticate(request);
             if (string.IsNullOrEmpty(result.ResultObj))
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
             return Ok(result);
         }
@@ -76,6 +76,12 @@ namespace eShopSolution.BackendApi.Controllers
         {
             var user = await _userService.GetById(id);
             return Ok(user);
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteById(Guid id)
+        {
+            var result = await _userService.DeleteById(id);
+            return Ok(result);
         }
     }
 }

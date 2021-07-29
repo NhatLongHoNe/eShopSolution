@@ -17,8 +17,23 @@
             <a target="_blank" href="https://datatables.net/">official DataTables documentation</a>
             .
             <p>
-                <a asp-action="Create">Create New</a>
+                <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
             </p>
+            <form asp-action="Index">
+                <div class="input-group">
+                    <input type="text" name="keyWord" value="@ViewBag.KeyWord" class="form-control" placeholder="Search Users">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-secondary">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                    <div class="input-group-append">
+                        <button type="button" onclick="window.location.href='/User/Index'" class="btn btn-secondary">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
     <div class="card mb-4">
@@ -77,7 +92,7 @@
                                 @Html.DisplayFor(modelItem => item.PhoneNumber)
                             </td>
                             <td>
-                                @Html.ActionLink("Edit", "Edit", new {  id=item.Id  }) |
+                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
                                 @Html.ActionLink("Details", "Details", new { id = item.Id }) |
                                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                             </td>
@@ -85,6 +100,7 @@
                     }
                 </tbody>
             </table>
+            @await Component.InvokeAsync("Pager", Model)
         </div>
     </div>
 </div>
