@@ -5,44 +5,65 @@
     ViewData["Title"] = "Danh sách người dùng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@section Scripts{
+    <script>
+        setTimeout(function () {
+            $('#Result').fadeOut("slow");
+        }, 2000);
+    </script>
+}
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Tables Users</h1>
+    <h1 class="mt-4">Danh sách người dùng</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a href="/User/Index">User</a></li>
-        <li class="breadcrumb-item active">Index</li>
+        <li class="breadcrumb-item"><a href="/Home/Index">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Danh sách người dùng</li>
     </ol>
     <div class="card mb-4">
         <div class="card-body">
-            DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the
-            <a target="_blank" href="https://datatables.net/">official DataTables documentation</a>
-            .
-            <p>
-                <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
-            </p>
-            <form asp-action="Index">
-                <div class="input-group">
-                    <input type="text" name="keyWord" value="@ViewBag.KeyWord" class="form-control" placeholder="Search Users">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-secondary">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
-                    <div class="input-group-append">
-                        <button type="button" onclick="window.location.href='/User/Index'" class="btn btn-secondary">
-                            <i class="fa fa-times"></i>
-                        </button>
-                    </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <p>
+                        <a asp-action="Create" class="btn btn-primary">Tạo mới</a>
+                    </p>
                 </div>
-            </form>
+
+                <div class="col-lg-2">
+
+                </div>
+                <div class="col-lg-7">
+                    <form asp-action="Index">
+                        <div class="input-group">
+                            <input type="text" name="keyWord" value="@ViewBag.KeyWord" class="form-control" placeholder="Search Users">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-secondary">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                            <div class="input-group-append">
+                                <button type="button" onclick="window.location.href='/User/Index'" class="btn btn-secondary">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
+        @if (ViewBag.SuccessMsg != null)
+        {
+            <div id="Result" class="alert alert-success" role="alert">
+                @ViewBag.SuccessMsg
+            </div>
+        }
     </div>
     <div class="card mb-4">
-        <div class="card-header">
+        @*<div class="card-header">
             <i class="fas fa-table me-1"></i>
             DataTable Example
-        </div>
+        </div>*@
         <div class="card-body">
-            <table class="table" id="datatablesSimple">
+            @* id="datatablesSimple" *@
+            <table class="table">
                 <thead>
                     <tr>
                         <th>
